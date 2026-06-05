@@ -1,0 +1,277 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f6fb;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* NAV */
+.navbar {
+  background: #1a1a2e;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.nav-brand {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.nav-links { display: flex; gap: 6px; }
+.nav-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.75);
+  padding: 7px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+.nav-btn:hover, .nav-btn.active {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border-color: rgba(255,255,255,0.5);
+}
+.admin-btn { border-color: #e05c5c !important; color: #f08080 !important; }
+.admin-btn:hover, .admin-btn.active { background: rgba(224,92,92,0.15) !important; color: #ff9999 !important; }
+
+/* CONTAINER */
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* SECTIONS */
+.section { display: none; }
+.section.active { display: block; }
+.section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1a1a2e;
+  border-left: 4px solid #4f6ef7;
+  padding-left: 12px;
+}
+
+/* CARS GRID */
+.cars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1rem;
+}
+.car-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border: 1px solid #e8eaf0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.car-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.car-icon { font-size: 2.2rem; margin-bottom: 0.75rem; }
+.car-name { font-size: 1.05rem; font-weight: 600; color: #1a1a2e; }
+.car-category {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin: 6px 0;
+  font-weight: 500;
+}
+.cat-suv { background: #e8f4fd; color: #1565c0; }
+.cat-economy { background: #e8f8e8; color: #2e7d32; }
+.cat-sedan { background: #fff3e0; color: #e65100; }
+.cat-luxury { background: #f3e5f5; color: #6a1b9a; }
+.car-price { font-size: 1.1rem; font-weight: 700; color: #4f6ef7; margin-top: 8px; }
+.car-price span { font-size: 0.8rem; font-weight: 400; color: #888; }
+.avail-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-top: 8px;
+  font-weight: 600;
+}
+.avail-yes { background: #e8f8e8; color: #2e7d32; }
+.avail-no { background: #fdecea; color: #c62828; }
+
+/* FORM CARD */
+.form-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 520px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border: 1px solid #e8eaf0;
+}
+.form-group { margin-bottom: 1.1rem; }
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 6px;
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #dde2ee;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fafbff;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: #4f6ef7;
+  background: #fff;
+}
+
+/* PAYMENT RADIO */
+.payment-options { display: flex; gap: 1.5rem; margin-top: 4px; }
+.radio-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; }
+
+/* BUTTONS */
+.btn {
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-top: 8px;
+  margin-right: 8px;
+}
+.btn-primary { background: #4f6ef7; color: #fff; }
+.btn-primary:hover { background: #3a56d4; }
+.btn-success { background: #2e7d32; color: #fff; }
+.btn-success:hover { background: #1b5e20; }
+.btn-danger { background: #c62828; color: #fff; }
+.btn-danger:hover { background: #b71c1c; }
+
+/* BILL PREVIEW */
+.bill-preview {
+  background: #f0f4ff;
+  border: 1px dashed #4f6ef7;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+  line-height: 1.8;
+}
+.bill-row { display: flex; justify-content: space-between; }
+.bill-row.total { font-weight: 700; font-size: 1rem; border-top: 1px solid #bcc8f5; padding-top: 6px; margin-top: 4px; color: #2e3a8a; }
+.bill-row.discount { color: #2e7d32; }
+
+/* RECEIPT */
+.receipt {
+  background: #fff;
+  border: 2px solid #4f6ef7;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 520px;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+.receipt h3 {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #4f6ef7;
+  margin-bottom: 0.5rem;
+}
+.receipt .subtitle { text-align: center; color: #888; font-size: 0.8rem; margin-bottom: 1rem; }
+.receipt-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f0f0f0; }
+.receipt-row:last-child { border-bottom: none; }
+.receipt-total { font-weight: 700; font-size: 1.05rem; color: #2e3a8a; margin-top: 8px; }
+.receipt-status {
+  text-align: center;
+  background: #e8f8e8;
+  color: #2e7d32;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+.booking-id {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 6px;
+}
+
+/* ADMIN */
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.2rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e8eaf0;
+}
+.stat-label { font-size: 0.8rem; color: #888; margin-bottom: 6px; }
+.stat-value { font-size: 1.6rem; font-weight: 700; color: #4f6ef7; }
+
+/* TABS */
+.tabs { display: flex; gap: 8px; margin-bottom: 1.2rem; border-bottom: 2px solid #e8eaf0; padding-bottom: 0; }
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #888;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.tab-btn.active { color: #4f6ef7; border-bottom-color: #4f6ef7; font-weight: 600; }
+
+/* TABLES */
+.data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.data-table th { background: #1a1a2e; color: #fff; padding: 10px 14px; font-size: 0.82rem; text-align: left; }
+.data-table td { padding: 10px 14px; font-size: 0.85rem; border-bottom: 1px solid #f0f0f0; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #f8f9ff; }
+
+/* MSG / TOAST */
+.msg { margin-top: 10px; font-size: 0.875rem; padding: 8px 12px; border-radius: 8px; min-height: 0; }
+.msg.success { background: #e8f8e8; color: #2e7d32; }
+.msg.error { background: #fdecea; color: #c62828; }
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #1a1a2e;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  z-index: 999;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  transition: opacity 0.3s;
+}
+
+.hidden { display: none !important; }
+.car-img{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:10px;
+}
