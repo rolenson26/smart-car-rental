@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Car Rental</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🚗 Smart Car Rental
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/cars">Browse Cars</a></li>
+            <li><a href="/my-bookings">My Bookings</a></li>
+            <li><a href="#">🤖 AI Suggestion</a></li>
+            <li><a href="/membership">👑 Membership</a></li>
+            <li><a href="/add-car">🚘 Add Car</a></li>
+            <li><a href="#">📞 Support</a></li>
+            {% if session.get("user_id") %}
+
+<li>
+    <a href="#">
+        Welcome, {{ session.get("user_name") }}
+    </a>
+</li>
+
+<li>
+    <a href="/logout">
+        Logout
+    </a>
+</li>
+
+{% else %}
+
+<li>
+    <a href="/login">
+        Login
+    </a>
+</li>
+
+<li>
+    <a href="/register">
+        Register
+    </a>
+</li>
+
+{% endif %}
+        </ul>
+
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

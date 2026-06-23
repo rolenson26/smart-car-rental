@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <h2>Add Your Car</h2>
+
+   <form id="carForm">
+
+            <input
+        type="text"
+        id="brand"
+        placeholder="Brand"
+    >
+
+    <input
+        type="text"
+        id="model"
+        placeholder="Model"
+    >
+
+    <input
+        type="number"
+        id="year"
+        placeholder="Year"
+    >
+
+    <input
+        type="text"
+        id="fuel_type"
+        placeholder="Fuel Type"
+    >
+
+    <input
+        type="text"
+        id="transmission"
+        placeholder="Transmission"
+    >
+
+    <input
+        type="number"
+        id="seats"
+        placeholder="Seats"
+    >
+
+    <input
+        type="number"
+        id="price_per_day"
+        placeholder="Price Per Day"
+    >
+
+    <textarea
+        id="description"
+        placeholder="Description"
+        rows="5"
+    ></textarea>
+    <button type="submit">
+    Add Car
+    </button>
+    </form>
+    
+
+</div>
+<script>
+
+document.getElementById(
+    "carForm"
+).addEventListener(
+    "submit",
+    async function(e){
+
+
+        e.preventDefault()
+
+        const response =
+        await fetch(
+            "/api/cars/add",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+
+                    owner_id:1,
+
+                    brand:
+                    document.getElementById(
+                        "brand"
+                    ).value,
+
+                    model:
+                    document.getElementById(
+                        "model"
+                    ).value,
+
+                    year:
+                    parseInt(
+                        document.getElementById(
+                            "year"
+                        ).value
+                    ),
+
+                    fuel_type:
+                    document.getElementById(
+                        "fuel_type"
+                    ).value,
+
+                    transmission:
+                    document.getElementById(
+                        "transmission"
+                    ).value,
+
+                    seats:
+                    parseInt(
+                        document.getElementById(
+                            "seats"
+                        ).value
+                    ),
+
+                    price_per_day:
+                    parseFloat(
+                        document.getElementById(
+                            "price_per_day"
+                        ).value
+                    ),
+
+                    description:
+                    document.getElementById(
+                        "description"
+                    ).value
+
+                })
+            }
+        )
+
+        const data =
+        await response.json()
+
+        alert(data.message)
+
+        window.location.href = "/cars"
+
+    }
+)
+
+</script>
+
+{% endblock %}

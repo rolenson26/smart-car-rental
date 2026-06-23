@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>Membership Plans</h1>
+    <h3>
+        Your Current Plan:
+        {{ current_plan }}
+    </h3>
+
+    {% for membership in memberships %}
+
+    <div class="card">
+
+        <h2>{{ membership.name }}</h2>
+
+        <h3>₹{{ membership.price }}</h3>
+
+        <p>
+            {{ membership.benefits }}
+        </p>
+
+        <a href="/choose-membership/{{ membership.membership_id }}">
+            <button>
+                Choose Plan
+            </button>
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
