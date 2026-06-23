@@ -1,50 +1,42 @@
 {% extends "base.html" %}
-
+{% block title %}Smart Car Rental | Home{% endblock %}
 {% block content %}
-
-<section class="hero">
-
-    <h1>
-        Find Your Perfect Rental Car
-    </h1>
-
-    <p>
-        Rent cars, earn money by listing your vehicle,
-        and enjoy AI-powered recommendations.
-    </p>
-
-    <div class="hero-buttons">
-
-        <button>
-            Browse Cars
-        </button>
-
-        <button>
-            🤖 AI Suggestion
-        </button>
-
+<section class="home-hero">
+    <div class="container py-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <p class="text-uppercase fw-semibold text-primary mb-2">Vehicle rentals anywhere</p>
+                <h1 class="display-5 fw-bold">Rent cars, bikes, and scooters from one clean platform.</h1>
+                <p class="lead text-muted mt-3">Search available vehicles, book dates, track status, and manage rentals from a responsive web app built for customers and admins.</p>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('vehicle.list_vehicles') }}">Browse vehicles</a>
+                    {% if not session.get("user_id") %}
+                        <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.register') }}">Create account</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero-panel">
+                    <div class="d-flex justify-content-between border-bottom pb-3 mb-3">
+                        <span class="fw-semibold">Rental flow</span>
+                        <span class="badge text-bg-success">Live</span>
+                    </div>
+                    <div class="flow-step">Search and filter vehicles</div>
+                    <div class="flow-step">Review details and pricing</div>
+                    <div class="flow-step">Submit booking request</div>
+                    <div class="flow-step">Admin tracks status and reports</div>
+                </div>
+            </div>
+        </div>
     </div>
-
 </section>
 
-<section class="features">
-
-    <div class="card">
-        🚗 Browse Cars
+<section class="container py-5">
+    <div class="row g-3">
+        <div class="col-md-3"><div class="metric-card"><strong>Multi-category</strong><span>Cars, bikes, scooters</span></div></div>
+        <div class="col-md-3"><div class="metric-card"><strong>Booking history</strong><span>User rental tracking</span></div></div>
+        <div class="col-md-3"><div class="metric-card"><strong>Admin tools</strong><span>CRUD and reporting</span></div></div>
+        <div class="col-md-3"><div class="metric-card"><strong>Payment-ready</strong><span>Pending payment records</span></div></div>
     </div>
-
-    <div class="card">
-        👑 Premium Membership
-    </div>
-
-    <div class="card">
-        🤖 AI Recommendation
-    </div>
-
-    <div class="card">
-        📞 24/7 Support
-    </div>
-
 </section>
-
 {% endblock %}

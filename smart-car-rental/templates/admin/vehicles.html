@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Vehicle Management | Smart Car Rental{% endblock %}
+{% block content %}
+<section class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold mb-0">Vehicle management</h1>
+        <a class="btn btn-primary" href="{{ url_for('admin.new_vehicle') }}">Add vehicle</a>
+    </div>
+    <div class="table-responsive app-table">
+        <table class="table align-middle mb-0">
+            <thead><tr><th>Name</th><th>Category</th><th>Registration</th><th>Price</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+            {% for vehicle in vehicles %}
+                <tr>
+                    <td><strong>{{ vehicle.vehicle_name }}</strong><div class="text-muted small">{{ vehicle.brand }} {{ vehicle.model }}</div></td>
+                    <td>{{ vehicle.category }}</td>
+                    <td>{{ vehicle.registration_number }}</td>
+                    <td>₹{{ "%.0f"|format(vehicle.rental_price) }}</td>
+                    <td>{{ vehicle.availability_status }}</td>
+                    <td class="text-end">
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('admin.edit_vehicle', vehicle_id=vehicle.id) }}">Edit</a>
+                        <form class="d-inline" method="post" action="{{ url_for('admin.delete_vehicle', vehicle_id=vehicle.id) }}">
+                            <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

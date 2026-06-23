@@ -1,63 +1,38 @@
-from database import db
 from datetime import datetime
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
+
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from database import db
 
 
 class User(db.Model):
-
     __tablename__ = "users"
 
-    user_id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), default="user", nullable=False)
+    phone = db.Column(db.String(20))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    full_name = db.Column(
-        db.String(100),
-        nullable=False
-    )
+    bookings = db.relationship("Booking", back_populates="user", cascade="all, delete-orphan")
+    reviews = db.relationship("Review", back_populates="user", cascade="all, delete-orphan")
 
-    email = db.Column(
-        db.String(120),
-        unique=True,
-        nullable=False
-    )
+    @property
+    def user_id(self):
+        return self.id
 
-    phone = db.Column(
-        db.String(20),
-        unique=True,
-        nullable=False
-    )
+    @property
+    def full_name(self):
+        return self.name
 
-    password_hash = db.Column(
-        db.String(255),
-        nullable=False
-    )
+    @full_name.setter
+    def full_name(self, value):
+        self.name = value
 
-    membership_type = db.Column(
-        db.String(20),
-        default="None"
-    )
-
-    loyalty_points = db.Column(
-        db.Integer,
-        default=0
-    )
-
-    created_at = db.Column(
-        db.DateTime,
-        default=datetime.utcnow
-    )
     def set_password(self, password):
-        self.password_hash = generate_password_hash(
-            password
-        )
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(
-            self.password_hash,
-            password
-    )
+        return check_password_hash(self.password_hash, password)

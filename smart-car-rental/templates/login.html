@@ -1,33 +1,21 @@
 {% extends "base.html" %}
-
+{% block title %}Login | Smart Car Rental{% endblock %}
 {% block content %}
-
-<div class="form-container">
-
-    <h2>Login</h2>
-
-    <form method="POST">
-
-        <input
-            type="text"
-            name="email"
-            placeholder="Email"
-            required
-        >
-
-        <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-        >
-
-        <button type="submit">
-            Login
-        </button>
-
-    </form>
-
-</div>
-
+<section class="container py-5">
+    <div class="auth-card mx-auto">
+        <h1 class="h3 fw-bold mb-1">Login</h1>
+        <p class="text-muted mb-4">Use `admin@smartcar.test` and `admin123` for the seeded admin account.</p>
+        <form method="post" class="vstack gap-3">
+            <div>
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" id="email" type="email" name="email" required>
+            </div>
+            <div>
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" id="password" type="password" name="password" required>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Login</button>
+        </form>
+    </div>
+</section>
 {% endblock %}

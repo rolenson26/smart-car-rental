@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit" if vehicle else "Add" }} Vehicle | Smart Car Rental{% endblock %}
+{% block content %}
+<section class="container py-4">
+    <div class="form-panel mx-auto wide-form">
+        <h1 class="h3 fw-bold mb-4">{{ "Edit" if vehicle else "Add" }} vehicle</h1>
+        <form method="post" class="row g-3">
+            <div class="col-md-6"><label class="form-label">Vehicle name</label><input class="form-control" name="vehicle_name" value="{{ vehicle.vehicle_name if vehicle else '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Category</label><input class="form-control" name="category" value="{{ vehicle.category if vehicle else '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Brand</label><input class="form-control" name="brand" value="{{ vehicle.brand if vehicle else '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Model</label><input class="form-control" name="model" value="{{ vehicle.model if vehicle else '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Registration number</label><input class="form-control" name="registration_number" value="{{ vehicle.registration_number if vehicle else '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Rental price</label><input class="form-control" type="number" min="0" step="0.01" name="rental_price" value="{{ vehicle.rental_price if vehicle else '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Status</label><select class="form-select" name="availability_status"><option {% if vehicle and vehicle.availability_status == "Available" %}selected{% endif %}>Available</option><option {% if vehicle and vehicle.availability_status == "Maintenance" %}selected{% endif %}>Maintenance</option><option {% if vehicle and vehicle.availability_status == "Unavailable" %}selected{% endif %}>Unavailable</option></select></div>
+            <div class="col-md-6"><label class="form-label">Image URL</label><input class="form-control" name="image" value="{{ vehicle.image if vehicle else '' }}"></div>
+            <div class="col-md-4"><label class="form-label">Seats</label><input class="form-control" type="number" name="seats" value="{{ vehicle.seats if vehicle else 4 }}"></div>
+            <div class="col-md-4"><label class="form-label">Fuel type</label><input class="form-control" name="fuel_type" value="{{ vehicle.fuel_type if vehicle else 'Petrol' }}"></div>
+            <div class="col-md-4"><label class="form-label">Transmission</label><input class="form-control" name="transmission" value="{{ vehicle.transmission if vehicle else 'Manual' }}"></div>
+            <div class="col-12"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="4">{{ vehicle.description if vehicle else '' }}</textarea></div>
+            <div class="col-12 d-flex gap-2">
+                <button class="btn btn-primary" type="submit">Save vehicle</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('admin.vehicles') }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

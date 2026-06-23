@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Reports | Smart Car Rental{% endblock %}
+{% block content %}
+<section class="container py-4">
+    <h1 class="h2 fw-bold mb-4">Reports</h1>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="report-panel">
+                <h2 class="h5 fw-bold">Bookings by status</h2>
+                {% for status, count in bookings_by_status %}
+                    <div class="report-row"><span>{{ status }}</span><strong>{{ count }}</strong></div>
+                {% else %}
+                    <p class="text-muted mb-0">No booking data yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="report-panel">
+                <h2 class="h5 fw-bold">Vehicles by category</h2>
+                {% for category, count in vehicles_by_category %}
+                    <div class="report-row"><span>{{ category }}</span><strong>{{ count }}</strong></div>
+                {% else %}
+                    <p class="text-muted mb-0">No vehicle data yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

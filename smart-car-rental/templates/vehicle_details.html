@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{{ vehicle.vehicle_name }} | Smart Car Rental{% endblock %}
+{% block content %}
+<section class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <img class="detail-image" src="{{ vehicle.image or 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80' }}" alt="{{ vehicle.vehicle_name }}">
+        </div>
+        <div class="col-lg-5">
+            <span class="badge text-bg-primary mb-2">{{ vehicle.category }}</span>
+            <h1 class="fw-bold">{{ vehicle.vehicle_name }}</h1>
+            <p class="text-muted">{{ vehicle.description }}</p>
+            <dl class="row detail-list">
+                <dt class="col-5">Brand</dt><dd class="col-7">{{ vehicle.brand }}</dd>
+                <dt class="col-5">Model</dt><dd class="col-7">{{ vehicle.model }}</dd>
+                <dt class="col-5">Registration</dt><dd class="col-7">{{ vehicle.registration_number }}</dd>
+                <dt class="col-5">Fuel</dt><dd class="col-7">{{ vehicle.fuel_type }}</dd>
+                <dt class="col-5">Transmission</dt><dd class="col-7">{{ vehicle.transmission }}</dd>
+                <dt class="col-5">Seats</dt><dd class="col-7">{{ vehicle.seats }}</dd>
+            </dl>
+            <div class="price-panel mb-3">
+                <span>Daily rental</span>
+                <strong>₹{{ "%.0f"|format(vehicle.rental_price) }}</strong>
+            </div>
+            <a class="btn btn-primary btn-lg w-100" href="{{ url_for('booking.book_vehicle', vehicle_id=vehicle.id) }}">Book this vehicle</a>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-4">
+        <div class="col-lg-7">
+            <h2 class="h4 fw-bold">Reviews</h2>
+            {% for review in vehicle.reviews %}
+                <div class="review-row">
+                    <strong>{{ review.user.name }}</strong>
+                    <span class="text-muted small">{{ review.rating }} / 5</span>
+                    <p class="mb-0">{{ review.comment }}</p>
+                </div>
+            {% else %}
+                <div class="empty-state">No reviews yet.</div>
+            {% endfor %}
+        </div>
+        <div class="col-lg-5">
+            <h2 class="h4 fw-bold">Add review</h2>
+            <form method="post" class="vstack gap-3">
+                <select class="form-select" name="rating" required>
+                    <option value="">Rating</option>
+                    <option value="5">5 - Excellent</option>
+                    <option value="4">4 - Good</option>
+                    <option value="3">3 - Average</option>
+                    <option value="2">2 - Poor</option>
+                    <option value="1">1 - Bad</option>
+                </select>
+                <textarea class="form-control" name="comment" rows="4" placeholder="Share your experience"></textarea>
+                <button class="btn btn-outline-primary" type="submit">Submit review</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

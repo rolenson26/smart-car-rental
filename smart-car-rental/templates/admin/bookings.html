@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Booking Management | Smart Car Rental{% endblock %}
+{% block content %}
+<section class="container py-4">
+    <h1 class="h2 fw-bold mb-4">Booking management</h1>
+    <div class="table-responsive app-table">
+        <table class="table align-middle mb-0">
+            <thead><tr><th>ID</th><th>User</th><th>Vehicle</th><th>Dates</th><th>Total</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+            {% for booking in bookings %}
+                <tr>
+                    <td>#{{ booking.id }}</td>
+                    <td>{{ booking.user.name }}</td>
+                    <td>{{ booking.vehicle.vehicle_name }}</td>
+                    <td>{{ booking.booking_date }} to {{ booking.return_date }}</td>
+                    <td>₹{{ "%.0f"|format(booking.total_amount) }}</td>
+                    <td><span class="badge text-bg-secondary">{{ booking.status }}</span></td>
+                    <td class="text-end">
+                        <form method="post" action="{{ url_for('admin.update_booking_status', booking_id=booking.id) }}" class="d-inline-flex gap-2">
+                            <select class="form-select form-select-sm" name="status">
+                                {% for status in ["Pending", "Confirmed", "Active", "Completed", "Cancelled"] %}
+                                    <option value="{{ status }}" {% if booking.status == status %}selected{% endif %}>{{ status }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-outline-primary btn-sm" type="submit">Save</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7">No bookings found.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

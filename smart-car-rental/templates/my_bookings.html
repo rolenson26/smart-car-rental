@@ -1,75 +1,44 @@
 {% extends "base.html" %}
-
+{% block title %}My Bookings | Smart Car Rental{% endblock %}
 {% block content %}
-
-<div class="cars-container">
-
-    {% for booking in bookings %}
-
-    <div class="car-card">
-
-        <h2>
-            Booking #{{ booking.booking_id }}
-        </h2>
-
-        <p>
-            
-            Car: {{ car_dict[booking.car_id] }}
-
-        </p>
-
-        <p>
-            Start: {{ booking.start_date }}
-        </p>
-
-        <p>
-            End: {{ booking.end_date }}
-        </p>
-
-        <p>
-            Status:
-            {% if booking.status == "Approved" %}
-                ✅ Approved
-            {% elif booking.status == "Rejected" %}
-                ❌ Rejected
+<section class="container py-4">
+    <h1 class="h2 fw-bold mb-4">My bookings</h1>
+    <div class="table-responsive app-table">
+        <table class="table align-middle mb-0">
+            <thead>
+            <tr>
+                <th>Vehicle</th>
+                <th>Dates</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for booking in bookings %}
+                <tr>
+                    <td>
+                        <strong>{{ booking.vehicle.vehicle_name }}</strong>
+                        <div class="text-muted small">{{ booking.vehicle.registration_number }}</div>
+                    </td>
+                    <td>{{ booking.booking_date }} to {{ booking.return_date }}</td>
+                    <td><span class="badge text-bg-secondary">{{ booking.status }}</span></td>
+                    <td>{{ booking.payment.payment_status if booking.payment else "Pending" }}</td>
+                    <td>₹{{ "%.0f"|format(booking.total_amount) }}</td>
+                    <td class="text-end">
+                        {% if booking.status not in ["Cancelled", "Completed"] %}
+                            <form method="post" action="{{ url_for('booking.cancel_booking', booking_id=booking.id) }}">
+                                <button class="btn btn-outline-danger btn-sm" type="submit">Cancel</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
             {% else %}
-                ⏳ Pending
-            {% endif %}
-        </p>
-       <button
-            onclick="cancelBooking({{ booking.booking_id }})"
->
-            Cancel Booking
-       </button>
-
+                <tr><td colspan="6"><div class="empty-state">You have not booked any vehicles yet.</div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-    {% endfor %}
-
-</div>
-<script>
-
-async function cancelBooking(bookingId){
-
-    const response =
-    await fetch(
-        "/api/bookings/delete/" + bookingId,
-        {
-            method:"DELETE"
-        }
-    )
-
-    const data =
-    await response.json()
-
-    alert(
-        data.message
-    )
-
-    location.reload()
-
-}
-
-</script>
-
+</section>
 {% endblock %}

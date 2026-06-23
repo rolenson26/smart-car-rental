@@ -1,75 +1,50 @@
-from database import db
 from datetime import datetime
 
+from database import db
 
-class Car(db.Model):
 
-    __tablename__ = "cars"
+class Vehicle(db.Model):
+    __tablename__ = "vehicles"
 
-    car_id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
+    id = db.Column(db.Integer, primary_key=True)
+    vehicle_name = db.Column(db.String(120), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    brand = db.Column(db.String(80), nullable=False)
+    model = db.Column(db.String(80), nullable=False)
+    registration_number = db.Column(db.String(40), unique=True, nullable=False)
+    rental_price = db.Column(db.Float, nullable=False)
+    image = db.Column(db.String(500))
+    availability_status = db.Column(db.String(30), default="Available", nullable=False)
+    seats = db.Column(db.Integer, default=4)
+    fuel_type = db.Column(db.String(40), default="Petrol")
+    transmission = db.Column(db.String(40), default="Manual")
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    owner_id = db.Column(
-        db.Integer,
-        nullable=False
-    )
+    bookings = db.relationship("Booking", back_populates="vehicle", cascade="all, delete-orphan")
+    reviews = db.relationship("Review", back_populates="vehicle", cascade="all, delete-orphan")
 
-    brand = db.Column(
-        db.String(100),
-        nullable=False
-    )
+    @property
+    def car_id(self):
+        return self.id
 
-    model = db.Column(
-        db.String(100),
-        nullable=False
-    )
+    @property
+    def price_per_day(self):
+        return self.rental_price
 
-    year = db.Column(
-        db.Integer,
-        nullable=False
-    )
+    @price_per_day.setter
+    def price_per_day(self, value):
+        self.rental_price = value
 
-    fuel_type = db.Column(
-        db.String(50),
-        nullable=False
-    )
+    @property
+    def availability(self):
+        return self.availability_status == "Available"
 
-    transmission = db.Column(
-        db.String(50),
-        nullable=False
-    )
+    @property
+    def average_rating(self):
+        if not self.reviews:
+            return 0
+        return round(sum(review.rating for review in self.reviews) / len(self.reviews), 1)
 
-    seats = db.Column(
-        db.Integer,
-        nullable=False
-    )
 
-    price_per_day = db.Column(
-        db.Float,
-        nullable=False
-    )
-
-    image = db.Column(
-        db.String(255)
-    )
-
-    rating = db.Column(
-        db.Float,
-        default=0
-    )
-
-    availability = db.Column(
-        db.Boolean,
-        default=True
-    )
-
-    description = db.Column(
-        db.Text
-    )
-
-    created_at = db.Column(
-        db.DateTime,
-        default=datetime.utcnow
-    )
+Car = Vehicle

@@ -1,50 +1,36 @@
+from datetime import datetime
+
 from database import db
 
 
 class Booking(db.Model):
-
     __tablename__ = "bookings"
 
-    booking_id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    vehicle_id = db.Column(db.Integer, db.ForeignKey("vehicles.id"), nullable=False)
+    booking_date = db.Column(db.Date, nullable=False)
+    return_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(30), default="Pending", nullable=False)
+    total_amount = db.Column(db.Float, default=0, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    user_id = db.Column(
-        db.Integer,
-        nullable=False
-    )
+    user = db.relationship("User", back_populates="bookings")
+    vehicle = db.relationship("Vehicle", back_populates="bookings")
+    payment = db.relationship("Payment", back_populates="booking", uselist=False, cascade="all, delete-orphan")
 
-    car_id = db.Column(
-        db.Integer,
-        nullable=False
-    )
+    @property
+    def booking_id(self):
+        return self.id
 
-    start_date = db.Column(
-        db.String(20),
-        nullable=False
-    )
+    @property
+    def car_id(self):
+        return self.vehicle_id
 
-    end_date = db.Column(
-        db.String(20),
-        nullable=False
-    )
+    @property
+    def start_date(self):
+        return self.booking_date
 
-    status = db.Column(
-        db.String(20),
-        default="Pending"
-    )
-    total_price = db.Column(
-        db.Float,
-        default=0
-    )
-
-    discount = db.Column(
-        db.Float,
-        default=0
-    )
-
-    final_price = db.Column(
-        db.Float,
-        default=0
-    )
+    @property
+    def end_date(self):
+        return self.return_date

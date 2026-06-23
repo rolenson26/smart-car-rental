@@ -1,267 +1,95 @@
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect,
-    session,
-    url_for
-)
-from routes.auth_routes import auth_bp
+from flask import Flask
 
 from config import Config
 from database import db
-
-from models.admin import Admin
-from models.user import User
-from models.owner import Owner
-
-from routes.car_routes import car_bp
-from models.car import Car
-from models.booking import Booking
+from models import Booking, Payment, Review, User, Vehicle
+from routes.admin_routes import admin_bp
+from routes.auth_routes import auth_bp
 from routes.booking_routes import booking_bp
-from routes.membership_routes import membership_bp
-from models.membership import Membership
+from routes.vehicle_routes import vehicle_bp
 
 
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-app = Flask(__name__)
+    db.init_app(app)
 
-app.config.from_object(Config)
-app.secret_key = "smart_car_rental_secret_key"
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(vehicle_bp)
+    app.register_blueprint(booking_bp)
+    app.register_blueprint(admin_bp)
 
-db.init_app(app)
+    with app.app_context():
+        db.create_all()
+        seed_database()
 
-app.register_blueprint(
-    auth_bp,
-    url_prefix="/api"
-)
-app.register_blueprint(
-    car_bp,
-    url_prefix="/api"
-)
-app.register_blueprint(
-    booking_bp,
-    url_prefix="/api"
-)
-app.register_blueprint(
-    membership_bp,
-    url_prefix="/api"
-)
+    return app
 
 
-@app.route("/")
-def home():
-    return render_template(
-        "home.html"
-    )
-
-
-@app.route(
-    "/login",
-    methods=["GET", "POST"]
-)
-def login_page():
-
-    if request.method == "POST":
-
-        email = request.form["email"]
-        password = request.form["password"]
-
-        user = User.query.filter_by(
-            email=email
-        ).first()
-
-        if user and user.check_password(
-            password
-        ):
-            session["user_id"] = user.user_id
-            session["user_name"] = user.full_name
-
-            return redirect("/")
-
-        return "Invalid email or password"
-
-    return render_template(
-        "login.html"
-    )
-@app.route("/logout")
-def logout():
-
-    session.clear()
-
-    return redirect("/login")
-
-
-@app.route(
-    "/register",
-    methods=["GET", "POST"]
-)
-def register_page():
-
-    if request.method == "POST":
-
-        user = User(
-            full_name=request.form["full_name"],
-            email=request.form["email"],
-            phone=request.form["phone"]
+def seed_database():
+    """Create starter data so a fresh clone opens with useful demo content."""
+    if not User.query.filter_by(email="admin@smartcar.test").first():
+        admin = User(
+            name="Platform Admin",
+            email="admin@smartcar.test",
+            role="admin",
         )
+        admin.set_password("admin123")
+        db.session.add(admin)
 
-        user.set_password(
-            request.form["password"]
-        )
-
-        db.session.add(user)
-        db.session.commit()
-
-        return redirect("/login")
-
-    return render_template(
-        "register.html"
-    )
-@app.route("/cars")
-def cars_page():
-
-    cars = Car.query.all()
-
-    return render_template(
-        "cars.html",
-        cars=cars
-    )
-@app.route("/add-car")
-def add_car_page():
-    return render_template(
-        "add_car.html"
-    )
-
-@app.route("/my-bookings")
-def my_bookings_page():
-
-    if "user_id" not in session:
-        return redirect("/login")
- 
-    user_id = session.get("user_id")
-
-    bookings = Booking.query.filter_by(
-    user_id=user_id
-    ).all()
-    cars = Car.query.all()
-
-    car_dict = {}
-
-    for car in cars:
-        car_dict[car.car_id] = (
-            car.brand + " " + car.model
-        )
-
-    return render_template(
-        "my_bookings.html",
-        bookings=bookings,
-        car_dict=car_dict
-    )
-@app.route("/owner-bookings")
-def owner_bookings_page():
-
-    bookings = Booking.query.all()
-
-    return render_template(
-        "owner_bookings.html",
-        bookings=bookings
-    )
-
-@app.route("/api/users")
-def get_users():
-
-    users = User.query.all()
-
-    return [
-        {
-            "id": user.user_id,
-            "name": user.full_name,
-            "email": user.email,
-            "phone": user.phone
-        }
-        for user in users
-    ]
-@app.route("/check-session")
-def check_session():
-
-    return {
-        "user_id": session.get("user_id"),
-        "user_name": session.get("user_name")
-    }
-@app.route("/membership")
-def membership_page():
-
-    memberships = Membership.query.all()
-
-    current_plan = "None"
-
-    if "user_id" in session:
-
-        user = User.query.get(
-            session["user_id"]
-        )
-
-        current_plan = user.membership_type
-
-    return render_template(
-        "membership.html",
-        memberships=memberships,
-        current_plan=current_plan
-    )
-@app.route("/choose-membership/<int:membership_id>")
-def choose_membership(membership_id):
-
-    if "user_id" not in session:
-        return redirect("/login")
-
-    user = User.query.get(
-        session["user_id"]
-    )
-
-    membership = Membership.query.get(
-        membership_id
-    )
-
-    user.membership_type = membership.name
+    if Vehicle.query.count() == 0:
+        vehicles = [
+            Vehicle(
+                vehicle_name="Toyota Urban Cruiser",
+                category="Car",
+                brand="Toyota",
+                model="Urban Cruiser",
+                registration_number="SCR-1001",
+                rental_price=2400,
+                image="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=80",
+                availability_status="Available",
+                seats=5,
+                fuel_type="Petrol",
+                transmission="Automatic",
+                description="Comfortable compact SUV for city and highway trips.",
+            ),
+            Vehicle(
+                vehicle_name="Honda Activa 6G",
+                category="Scooter",
+                brand="Honda",
+                model="Activa 6G",
+                registration_number="SCR-2001",
+                rental_price=450,
+                image="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=80",
+                availability_status="Available",
+                seats=2,
+                fuel_type="Petrol",
+                transmission="Automatic",
+                description="Easy daily scooter for short-distance rentals.",
+            ),
+            Vehicle(
+                vehicle_name="Royal Enfield Classic",
+                category="Bike",
+                brand="Royal Enfield",
+                model="Classic 350",
+                registration_number="SCR-3001",
+                rental_price=1200,
+                image="https://images.unsplash.com/photo-1558981359-219d6364c9c8?auto=format&fit=crop&w=900&q=80",
+                availability_status="Available",
+                seats=2,
+                fuel_type="Petrol",
+                transmission="Manual",
+                description="Touring-ready bike for weekend escapes.",
+            ),
+        ]
+        db.session.add_all(vehicles)
 
     db.session.commit()
 
-    return redirect("/membership")
 
-
-with app.app_context():
-
-    db.create_all()
-
-    if Membership.query.count() == 0:
-
-        basic = Membership(
-            name="Basic",
-            price=0,
-            benefits="Standard booking access"
-        )
-
-        premium = Membership(
-            name="Premium",
-            price=499,
-            benefits="Priority booking"
-        )
-
-        vip = Membership(
-            name="VIP",
-            price=999,
-            benefits="Priority booking + Extra discounts"
-        )
-
-        db.session.add(basic)
-        db.session.add(premium)
-        db.session.add(vip)
-
-        db.session.commit()
+app = create_app()
 
 
 if __name__ == "__main__":
-    app.run(
-        debug=True
-    )
+    app.run(debug=True)
